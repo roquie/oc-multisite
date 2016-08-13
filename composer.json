@@ -1,0 +1,12 @@
+{
+    "name": "roquie/multisite-plugin",
+    "type": "october-plugin",
+    "description": "Multisite plugin for October CMS",
+    "keywords": ["october", "octobercms", "multisite"],
+    "license": "MIT",
+    "require": {
+        "php": ">=5.5.9",
+        "composer/installers": "~1.0"
+    },
+    "minimum-stability": "dev"
+}
