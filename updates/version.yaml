@@ -1,2 +1,4 @@
 1.0.0:
     - First version of Roquie.Multisite, based on Keios.Multisite.
+    - create_settings_table.php
+    - settings_add_is_protected.php
