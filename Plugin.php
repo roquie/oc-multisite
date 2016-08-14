@@ -1,15 +1,15 @@
-<?php namespace Keios\Multisite;
+<?php
+namespace Roquie\Multisite;
 
-use System\Classes\PluginBase;
-use Keios\Multisite\Models\Setting;
+use App;
 use BackendAuth;
-use Backend;
+use Cache;
 use Config;
 use Event;
-use Cache;
-use Request;
-use App;
 use Flash;
+use Request;
+use Roquie\Multisite\Models\Setting;
+use System\Classes\PluginBase;
 
 /**
  * Multisite Plugin Information File
@@ -27,10 +27,10 @@ class Plugin extends PluginBase
     public function pluginDetails()
     {
         return [
-            'name' => 'keios.multisite::lang.details.title',
-            'description' => 'keios.multisite::lang.details.description',
-            'author' => 'VoipDeploy',
-            'icon' => 'icon-cubes'
+            'name'        => 'roquie.multisite::lang.details.title',
+            'description' => 'roquie.multisite::lang.details.description',
+            'author'      => 'Roquie',
+            'icon'        => 'icon-cubes'
         ];
     }
 
@@ -38,44 +38,45 @@ class Plugin extends PluginBase
     {
         return [
             'multisite' => [
-                'label' => 'keios.multisite::lang.details.title',
-                'description' => 'keios.multisite::lang.details.description',
-                'category' => 'system::lang.system.categories.cms',
-                'icon' => 'icon-cubes',
-                'url' => Backend::url('keios/multisite/settings'),
-                'order' => 500,
-                'keywords' => 'multisite domains themes'
+                'label'       => 'roquie.multisite::lang.details.title',
+                'description' => 'roquie.multisite::lang.details.description',
+                'category'    => 'system::lang.system.categories.cms',
+                'icon'        => 'icon-cubes',
+                'url'         => Backend::url('roquie/multisite/settings'),
+                'order'       => 500,
+                'keywords'    => 'multisite domains themes'
             ]
         ];
     }
 
     public function boot()
     {
-        $backendUri = Config::get('cms.backendUri');
-        $requestUrl = Request::url();
+        $backendUri     = Config::get('cms.backendUri');
+        $requestUrl     = Request::url();
         $currentHostUrl = Request::getHost();
 
         /*
          * Get domain to theme bindings from cache, if it's not there, load them from database,
          * save to cache and use for theme selection.
          */
-        $binds = Cache::rememberForever('keios_multisite_settings', function () {
-
+        $binds = Cache::rememberForever('roquie_multisite_settings', function () {
             try {
                 $cacheableRecords = Setting::generateCacheableRecords();
             } catch (\Illuminate\Database\QueryException $e) {
-                if (BackendAuth::check())
-                    Flash::error(trans('keios.multisite:lang.flash.db-error'));
+                if (BackendAuth::check()) {
+                    Flash::error(trans('roquie.multisite:lang.flash.db-error'));
+                }
                 return null;
             }
             return $cacheableRecords;
-
         });
 
         /*
          * Oooops something went wrong, abort.
          */
-        if ($binds === null) return;
+        if ($binds === null) {
+            return;
+        }
 
         /*
          * Check if this request is in backend scope and is using domain,
@@ -84,14 +85,16 @@ class Plugin extends PluginBase
         foreach ($binds as $domain => $bind) {
             if (preg_match('/\\' . $backendUri . '/', $requestUrl) && preg_match('/' . $currentHostUrl . '/i', $domain) && $bind['is_protected']) {
                 return App::abort(401, 'Unauthorized.');
-            };
+            }
         }
 
         /*
          * If current request is in backend scope, do not check cms themes
          * Allows for current theme changes in October Theme Selector
          */
-        if (preg_match('/\\' . $backendUri . '/', $requestUrl)) return;
+        if (preg_match('/\\' . $backendUri . '/', $requestUrl)) {
+            return;
+        }
 
         /*
          * Listen for CMS activeTheme event, change theme according to binds
@@ -106,5 +109,4 @@ class Plugin extends PluginBase
             }
         });
     }
-
 }

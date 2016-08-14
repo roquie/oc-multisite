@@ -6,22 +6,22 @@
 name: Setting
 
 # Model Form Field configuration
-form: $/keios/multisite/models/setting/fields.yaml
+form: $/roquie/multisite/models/setting/fields.yaml
 
 # Model Class name
-modelClass: Keios\Multisite\Models\Setting
+modelClass: Roquie\Multisite\Models\Setting
 
 # Default redirect location
-defaultRedirect: keios/multisite/settings
+defaultRedirect: roquie/multisite/settings
 
 # Create page
 create:
-    title: keios.multisite::lang.controller.create
-    redirect: keios/multisite/settings/update/:id
-    redirectClose: keios/multisite/settings
+    title: roquie.multisite::lang.controller.create
+    redirect: roquie/multisite/settings/update/:id
+    redirectClose: roquie/multisite/settings
 
 # Update page
 update:
-    title: keios.multisite::lang.controller.create
-    redirect: keios/multisite/settings
-    redirectClose: keios/multisite/settings
+    title: roquie.multisite::lang.controller.create
+    redirect: roquie/multisite/settings
+    redirectClose: roquie/multisite/settings

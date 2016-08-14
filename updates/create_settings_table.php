@@ -1,4 +1,5 @@
-<?php namespace Keios\Multisite\Updates;
+<?php
+namespace Roquie\Multisite\Updates;
 
 use Schema;
 use October\Rain\Database\Updates\Migration;
@@ -8,7 +9,7 @@ class CreateSettingsTable extends Migration
 
     public function up()
     {
-        Schema::create('keios_multisite_settings', function($table)
+        Schema::create('roquie_multisite_settings', function($table)
         {
             $table->engine = 'InnoDB';
             $table->increments('id');
@@ -20,7 +21,7 @@ class CreateSettingsTable extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('keios_multisite_settings');
+        Schema::dropIfExists('roquie_multisite_settings');
     }
 
 }

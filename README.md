@@ -8,7 +8,7 @@
 
 ####Warning
 
-If you use Multisite plugin from OctoberCMS Market, please do not use this repository. Voipdeploy brand is merging with Keios and this version of the plugin has all namespaces and table names replaced. As soon as our brand is upgraded in OctoberCMS Market, we will remove this notice.
+If you use Multisite plugin from OctoberCMS Market, please do not use this repository. Voipdeploy brand is merging with roquie and this version of the plugin has all namespaces and table names replaced. As soon as our brand is upgraded in OctoberCMS Market, we will remove this notice.
 
 ####How to use:
 

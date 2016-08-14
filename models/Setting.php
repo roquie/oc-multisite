@@ -1,9 +1,11 @@
-<?php namespace Keios\Multisite\Models;
+<?php
+namespace Roquie\Multisite\Models;
 
-use Model;
+use Cache;
 use Config;
 use DirectoryIterator;
-use Cache;
+use Model;
+use October\Rain\Database\Traits\Validation;
 use Request;
 
 /**
@@ -11,16 +13,16 @@ use Request;
  */
 class Setting extends Model
 {
-    use \October\Rain\Database\Traits\Validation;
+    use Validation;
 
     public $rules = [
         'domain' => 'required|url',
-        'theme' => 'required',
+        'theme'  => 'required',
     ];
     /**
      * @var string The database table used by the model.
      */
-    public $table = 'keios_multisite_settings';
+    public $table = 'roquie_multisite_settings';
 
     /**
      * @var array Guarded fields
@@ -35,15 +37,15 @@ class Setting extends Model
     /**
      * @var array Relations
      */
-    public $hasOne = [];
-    public $hasMany = [];
-    public $belongsTo = [];
+    public $hasOne        = [];
+    public $hasMany       = [];
+    public $belongsTo     = [];
     public $belongsToMany = [];
-    public $morphTo = [];
-    public $morphOne = [];
-    public $morphMany = [];
-    public $attachOne = [];
-    public $attachMany = [];
+    public $morphTo       = [];
+    public $morphOne      = [];
+    public $morphMany     = [];
+    public $attachOne     = [];
+    public $attachMany    = [];
 
     /*
      * Get all currently available themes, return them to form widget for selection
@@ -54,7 +56,9 @@ class Setting extends Model
         $themeDirs = [];
 
         foreach (new DirectoryIterator($path) as $file) {
-            if ($file->isDot()) continue;
+            if ($file->isDot()) {
+                continue;
+            }
             if ($file->isDir()) {
                 $name = $file->getBasename();
                 $themeDirs[$name] = $name;
@@ -66,7 +70,9 @@ class Setting extends Model
 
     public function beforeSave()
     {
-        if (preg_match('/' . Request::getHost() . '/', $this->domain) && $this->is_protected) return false;
+        if (preg_match('/' . Request::getHost() . '/', $this->domain) && $this->is_protected) {
+            return false;
+        }
     }
 
     /*
@@ -75,23 +81,23 @@ class Setting extends Model
     public function afterSave()
     {
         // forget current data
-        Cache::forget('keios_multisite_settings');
+        Cache::forget('roquie_multisite_settings');
 
         // get all records available now
         $cacheableRecords = Setting::generateCacheableRecords();
 
         //save them in cache
-        Cache::forever('keios_multisite_settings', $cacheableRecords);
+        Cache::forever('roquie_multisite_settings', $cacheableRecords);
     }
 
     public static function generateCacheableRecords()
     {
-        $allRecords = Setting::all()->toArray();
+        $allRecords       = Setting::all()->toArray();
         $cacheableRecords = [];
 
         foreach ($allRecords as $record) {
             $cacheableRecords[$record['domain']] = [
-                'theme' => $record['theme'],
+                'theme'        => $record['theme'],
                 'is_protected' => $record['is_protected']
             ];
         }
